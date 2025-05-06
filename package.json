@@ -1,39 +1,41 @@
 {
-  "name": "code-challenge-oop",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "directories": {
-    "example": "examples"
-  },
-  "scripts": {
-    "build": "tsc",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KristinaVidakovic/code-challenge-oop.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/KristinaVidakovic/code-challenge-oop/issues"
-  },
-  "homepage": "https://github.com/KristinaVidakovic/code-challenge-oop#readme",
-  "description": "",
-  "devDependencies": {
-    "@types/node": "^22.15.13",
-    "@typescript-eslint/eslint-plugin": "^8.32.0",
-    "@typescript-eslint/parser": "^8.32.0",
-    "eslint": "^9.26.0",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-prettier": "^5.4.0",
-    "globals": "^16.0.0",
-    "nodemon": "^3.1.10",
-    "prettier": "^3.5.3",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.0"
-  }
+    "name": "code-challenge-oop",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "directories": {
+        "example": "examples"
+    },
+    "scripts": {
+        "lint": "eslint . --ext .ts",
+        "format": "prettier --write .",
+        "build": "tsc",
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/KristinaVidakovic/code-challenge-oop.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/KristinaVidakovic/code-challenge-oop/issues"
+    },
+    "homepage": "https://github.com/KristinaVidakovic/code-challenge-oop#readme",
+    "description": "",
+    "devDependencies": {
+        "@types/node": "^22.15.13",
+        "@typescript-eslint/eslint-plugin": "^8.32.0",
+        "@typescript-eslint/parser": "^8.32.0",
+        "eslint": "^9.26.0",
+        "eslint-config-prettier": "^10.1.2",
+        "eslint-plugin-prettier": "^5.4.0",
+        "globals": "^16.0.0",
+        "nodemon": "^3.1.10",
+        "prettier": "^3.5.3",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.32.0"
+    }
 }
