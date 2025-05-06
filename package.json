@@ -19,5 +19,9 @@
     "url": "https://github.com/KristinaVidakovic/code-challenge-oop/issues"
   },
   "homepage": "https://github.com/KristinaVidakovic/code-challenge-oop#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.15.13",
+    "typescript": "^5.8.3"
+  }
 }
