@@ -1,12 +1,14 @@
 {
   "name": "code-challenge-oop",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node src/index.ts",
+    "dev": "ts-node-dev src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.15.13",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }
 }
