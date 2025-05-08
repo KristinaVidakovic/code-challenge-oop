@@ -31,26 +31,29 @@ export class Pathfinder {
 
         while (direction) {
             const nextPosition = this.directionManager.move(position, direction);
-            const nextChar = this.matrix.getCharacterAtPosition(nextPosition);
+            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
 
-            if (nextChar === END_CHARACTER) break;
-            if (nextChar === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
-            if (!this.stepTracker.isValidPathChar(nextChar)) throw ERRORS.INVALID_CHARACTER;
+
+            if (nextCharacter === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
+            if (!this.stepTracker.isValidPathCharacter(nextCharacter))
+                throw ERRORS.INVALID_CHARACTER;
             if (
-                !this.directionManager.areCharAndDirectionSynced(nextChar, direction) &&
+                !this.directionManager.areCharAndDirectionSynced(nextCharacter, direction) &&
                 !this.stepTracker.isVisited(nextPosition)
             ) {
                 throw ERRORS.INVALID_DIRECTION(direction);
             }
 
             position = nextPosition;
-            this.stepTracker.addStep(nextChar, position, direction);
+            this.stepTracker.addStep(nextCharacter, position, direction);
+
+            if (nextCharacter === END_CHARACTER) break;
 
             if (this.directionManager.isFakeTurn(direction, position)) {
                 throw ERRORS.FAKE_TURN;
             }
 
-            if (this.isCorner(nextChar, position, direction)) {
+            if (this.isCorner(nextCharacter, position, direction)) {
                 direction = this.directionManager.changeDirection(
                     direction,
                     position,
@@ -62,10 +65,10 @@ export class Pathfinder {
         return this.getFinalPath();
     }
 
-    isCorner(char: string, position: Position, direction: Direction): boolean {
+    isCorner(character: string, position: Position, direction: Direction): boolean {
         return (
-            char === CORNER_CHARACTER ||
-            (this.stepTracker.isValidLetter(char) &&
+            character === CORNER_CHARACTER ||
+            (this.stepTracker.isValidLetter(character) &&
                 this.matrix.getCharacterAtPosition(
                     this.directionManager.move(position, direction),
                 ) === NO_PATH_CHARACTER)

@@ -27,7 +27,7 @@ export class DirectionManager {
         for (const d of directions) {
             const nextPosition = this.move(position, d);
             const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
-            if (this.stepTracker.isValidPathChar(nextCharacter)) {
+            if (this.stepTracker.isValidPathCharacter(nextCharacter)) {
                 count++;
                 direction = d;
                 if (count > 1) {
@@ -52,7 +52,7 @@ export class DirectionManager {
             const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
             const previousPosition = steps[steps.length - 2].position;
             if (
-                this.stepTracker.isValidPathChar(testCharacter) &&
+                this.stepTracker.isValidPathCharacter(testCharacter) &&
                 testPosition !== previousPosition
             ) {
                 count++;
@@ -79,23 +79,23 @@ export class DirectionManager {
         }
     }
 
-    areCharAndDirectionSynced(char: string, direction: Direction): boolean {
+    areCharAndDirectionSynced(character: string, direction: Direction): boolean {
         switch (direction) {
             case Direction.DOWN:
             case Direction.UP:
-                return char !== HORIZONTAL_CHARACTER;
+                return character !== HORIZONTAL_CHARACTER;
             case Direction.LEFT:
             case Direction.RIGHT:
-                return char !== VERTICAL_CHARACTER;
+                return character !== VERTICAL_CHARACTER;
         }
     }
 
     isFakeTurn(direction: Direction, position: Position): boolean {
-        const char = this.matrix.getCharacterAtPosition(position);
+        const character = this.matrix.getCharacterAtPosition(position);
         const nextPosition = this.move(position, direction);
         const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
         return (
-            char === CORNER_CHARACTER &&
+            character === CORNER_CHARACTER &&
             nextCharacter !== NO_PATH_CHARACTER &&
             !this.stepTracker.isVisited(nextPosition)
         );

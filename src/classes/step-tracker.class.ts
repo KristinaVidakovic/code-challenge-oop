@@ -7,16 +7,16 @@ export class StepTracker {
     private letters: string[] = [];
     private visited: Position[] = [];
 
-    addStep(char: string, pos: Position, dir: Direction | null): void {
-        this.steps.push({ char, position: { ...pos }, direction: dir });
-        if (!this.isVisited(pos)) {
-            this.visited.push(pos);
-            if (this.isValidLetter(char)) this.letters.push(char);
+    addStep(character: string, position: Position, direction: Direction | null): void {
+        this.steps.push({ char: character, position: { ...position }, direction });
+        if (!this.isVisited(position)) {
+            this.visited.push(position);
+            if (this.isValidLetter(character)) this.letters.push(character);
         }
     }
 
-    isVisited(pos: Position): boolean {
-        return this.visited.some((p) => p.x === pos.x && p.y === pos.y);
+    isVisited(position: Position): boolean {
+        return this.visited.some((p) => p.x === position.x && p.y === position.y);
     }
 
     getPath(): string {
@@ -31,7 +31,7 @@ export class StepTracker {
         return this.steps;
     }
 
-    isValidPathChar(char: string): boolean {
+    isValidPathCharacter(char: string): boolean {
         const validCharacterRegex: RegExp = new RegExp('^[A-Z\\-|+@x]$');
         return validCharacterRegex.test(char);
     }
