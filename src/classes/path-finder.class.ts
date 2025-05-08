@@ -2,20 +2,20 @@ import { Matrix } from './matrix.class';
 import { StepTracker } from './step-tracker.class';
 import { DirectionManager } from './direction-manager.class';
 import { FinalPath } from '../interfaces/final-path.interface';
-import { END_CHARACTER, NO_PATH_CHARACTER, START_CHARACTER } from '../utils/constants';
-import { ERRORS } from '../utils/errors';
+import { START_CHARACTER } from '../utils/constants';
 import { CornerHandler } from './corner-handler.class';
 import { PathValidator } from './path-validator.class';
-import { PositionService } from './position-service.class';
 import { PathBuilder } from './path-builder.class';
+import { PathWalker } from './path-walker.class';
 
 export class PathFinder {
     private readonly matrix: Matrix;
     private readonly stepTracker: StepTracker;
     private readonly directionManager: DirectionManager;
-    private cornerHandler: CornerHandler;
+    private readonly cornerHandler: CornerHandler;
     private pathValidator: PathValidator;
     private pathBuilder: PathBuilder;
+    private pathWalker: PathWalker;
 
     constructor(matrix: string[][]) {
         this.matrix = new Matrix(matrix);
@@ -24,6 +24,12 @@ export class PathFinder {
         this.cornerHandler = new CornerHandler(this.matrix, this.stepTracker);
         this.pathValidator = new PathValidator(this.matrix);
         this.pathBuilder = new PathBuilder(this.stepTracker);
+        this.pathWalker = new PathWalker(
+            this.matrix,
+            this.stepTracker,
+            this.directionManager,
+            this.cornerHandler,
+        );
     }
 
     public findPath(): FinalPath {
@@ -32,37 +38,7 @@ export class PathFinder {
 
         this.stepTracker.addStep(START_CHARACTER, position, null);
 
-        while (direction) {
-            const nextPosition = PositionService.move(position, direction);
-            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
-
-            if (nextCharacter === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
-            if (!this.stepTracker.isValidPathCharacter(nextCharacter))
-                throw ERRORS.INVALID_CHARACTER;
-            if (
-                !this.directionManager.areCharAndDirectionSynced(nextCharacter, direction) &&
-                !this.stepTracker.isVisited(nextPosition)
-            ) {
-                throw ERRORS.INVALID_DIRECTION(direction);
-            }
-
-            position = nextPosition;
-            this.stepTracker.addStep(nextCharacter, position, direction);
-
-            if (nextCharacter === END_CHARACTER) break;
-
-            if (this.directionManager.isFakeTurn(direction, position)) {
-                throw ERRORS.FAKE_TURN;
-            }
-
-            if (this.cornerHandler.isCorner(nextCharacter, position, direction)) {
-                direction = this.directionManager.changeDirection(
-                    direction,
-                    position,
-                    this.stepTracker.getSteps(),
-                );
-            }
-        }
+        this.pathWalker.walk(position, direction);
 
         return this.pathBuilder.buildFinalPath();
     }

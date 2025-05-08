@@ -1,0 +1,73 @@
+import { Position } from '../interfaces/position.interface';
+import { Direction } from '../enums/direction.enum';
+import { PositionService } from './position-service.class';
+import { END_CHARACTER, NO_PATH_CHARACTER } from '../utils/constants';
+import { ERRORS } from '../utils/errors';
+import { Matrix } from './matrix.class';
+import { StepTracker } from './step-tracker.class';
+import { DirectionManager } from './direction-manager.class';
+import { CornerHandler } from './corner-handler.class';
+
+export class PathWalker {
+    private matrix: Matrix;
+    private stepTracker: StepTracker;
+    private directionManager: DirectionManager;
+    private cornerHandler: CornerHandler;
+
+    constructor(
+        matrix: Matrix,
+        stepTracker: StepTracker,
+        directionManager: DirectionManager,
+        cornerHandler: CornerHandler,
+    ) {
+        this.matrix = matrix;
+        this.stepTracker = stepTracker;
+        this.directionManager = directionManager;
+        this.cornerHandler = cornerHandler;
+    }
+
+    walk(position: Position, direction: Direction | null): void {
+        while (direction) {
+            const nextPosition = PositionService.move(position, direction);
+            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
+
+            this.validateStep(nextCharacter, direction, nextPosition);
+
+            position = nextPosition;
+            this.stepTracker.addStep(nextCharacter, position, direction);
+
+            if (nextCharacter === END_CHARACTER) break;
+
+            this.validateFakeTurn(direction, nextPosition);
+
+            if (this.cornerHandler.isCorner(nextCharacter, position, direction)) {
+                direction = this.changeDirection(direction, position);
+            }
+        }
+    }
+
+    private validateStep(character: string, direction: Direction, position: Position): void {
+        if (character === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
+        if (!this.stepTracker.isValidPathCharacter(character)) throw ERRORS.INVALID_CHARACTER;
+        if (
+            !this.directionManager.areCharAndDirectionSynced(character, direction) &&
+            !this.stepTracker.isVisited(position)
+        ) {
+            throw ERRORS.INVALID_DIRECTION(direction);
+        }
+    }
+
+    private validateFakeTurn(direction: Direction, position: Position): void {
+        if (this.directionManager.isFakeTurn(direction, position)) {
+            throw ERRORS.FAKE_TURN;
+        }
+    }
+
+    private changeDirection(direction: Direction, position: Position): Direction {
+        return this.directionManager.changeDirection(
+            direction,
+            position,
+            this.stepTracker.getSteps(),
+        );
+    }
+}
