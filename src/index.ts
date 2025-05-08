@@ -16,8 +16,8 @@ if (!options.file) {
 try {
     const content = fs.readFileSync(options.file, { encoding: 'utf8' });
     const contentMatrix = content.split('\n').map((str) => str.split(''));
-    const finalPath = new Pathfinder(contentMatrix);
-    const result = finalPath.findPath();
+    const pathfinder = new Pathfinder(contentMatrix);
+    const result = pathfinder.findPath();
     console.log(`Letters: ${result.letters} \nPath: ${result.path}`);
 } catch (error) {
     console.error(error);
