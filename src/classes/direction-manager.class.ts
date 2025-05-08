@@ -13,8 +13,8 @@ import { Step } from '../interfaces/step.interface';
 import { PositionService } from './position-service.class';
 
 export class DirectionManager {
-    private matrix: Matrix;
-    private stepTracker: StepTracker;
+    private readonly matrix: Matrix;
+    private readonly stepTracker: StepTracker;
 
     constructor(matrix: Matrix, stepTracker: StepTracker) {
         this.matrix = matrix;
