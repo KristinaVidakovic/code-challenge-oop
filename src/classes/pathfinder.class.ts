@@ -9,6 +9,8 @@ import {
     START_CHARACTER,
 } from '../utils/constants';
 import { ERRORS } from '../utils/errors';
+import { Position } from '../interfaces/position.interface';
+import { Direction } from '../enums/direction.enum';
 
 export class Pathfinder {
     private readonly matrix: Matrix;
@@ -31,6 +33,7 @@ export class Pathfinder {
             const nextPosition = this.directionManager.move(position, direction);
             const nextChar = this.matrix.getCharacterAtPosition(nextPosition);
 
+            if (nextChar === END_CHARACTER) break;
             if (nextChar === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
             if (!this.stepTracker.isValidPathChar(nextChar)) throw ERRORS.INVALID_CHARACTER;
             if (
@@ -43,19 +46,11 @@ export class Pathfinder {
             position = nextPosition;
             this.stepTracker.addStep(nextChar, position, direction);
 
-            if (nextChar === END_CHARACTER) break;
-
             if (this.directionManager.isFakeTurn(direction, position)) {
                 throw ERRORS.FAKE_TURN;
             }
 
-            if (
-                nextChar === CORNER_CHARACTER ||
-                (this.stepTracker.isValidLetter(nextChar) &&
-                    this.matrix.getCharacterAtPosition(
-                        this.directionManager.move(position, direction),
-                    ) === NO_PATH_CHARACTER)
-            ) {
+            if (this.isCorner(nextChar, position, direction)) {
                 direction = this.directionManager.changeDirection(
                     direction,
                     position,
@@ -65,6 +60,16 @@ export class Pathfinder {
         }
 
         return this.getFinalPath();
+    }
+
+    isCorner(char: string, position: Position, direction: Direction): boolean {
+        return (
+            char === CORNER_CHARACTER ||
+            (this.stepTracker.isValidLetter(char) &&
+                this.matrix.getCharacterAtPosition(
+                    this.directionManager.move(position, direction),
+                ) === NO_PATH_CHARACTER)
+        );
     }
 
     getFinalPath(): FinalPath {
