@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import * as fs from 'fs';
-import { Pathfinder } from './classes/pathfinder.class';
+import { PathFinder } from './classes/path-finder.class';
 
 const program = new Command();
 
@@ -16,7 +16,7 @@ if (!options.file) {
 try {
     const content = fs.readFileSync(options.file, { encoding: 'utf8' });
     const contentMatrix = content.split('\n').map((str) => str.split(''));
-    const pathfinder = new Pathfinder(contentMatrix);
+    const pathfinder = new PathFinder(contentMatrix);
     const result = pathfinder.findPath();
     console.log(`Letters: ${result.letters} \nPath: ${result.path}`);
 } catch (error) {

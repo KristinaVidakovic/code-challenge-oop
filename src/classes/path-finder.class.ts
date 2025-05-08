@@ -7,13 +7,15 @@ import { ERRORS } from '../utils/errors';
 import { CornerHandler } from './corner-handler.class';
 import { PathValidator } from './path-validator.class';
 import { PositionService } from './position-service.class';
+import { PathBuilder } from './path-builder.class';
 
-export class Pathfinder {
+export class PathFinder {
     private readonly matrix: Matrix;
     private readonly stepTracker: StepTracker;
     private readonly directionManager: DirectionManager;
     private cornerHandler: CornerHandler;
     private pathValidator: PathValidator;
+    private pathBuilder: PathBuilder;
 
     constructor(matrix: string[][]) {
         this.matrix = new Matrix(matrix);
@@ -21,6 +23,7 @@ export class Pathfinder {
         this.directionManager = new DirectionManager(this.matrix, this.stepTracker);
         this.cornerHandler = new CornerHandler(this.matrix, this.stepTracker);
         this.pathValidator = new PathValidator(this.matrix);
+        this.pathBuilder = new PathBuilder(this.stepTracker);
     }
 
     public findPath(): FinalPath {
@@ -61,12 +64,6 @@ export class Pathfinder {
             }
         }
 
-        return this.getFinalPath();
-    }
-
-    getFinalPath(): FinalPath {
-        const letters = this.stepTracker.getLetters();
-        const path = this.stepTracker.getPath();
-        return { letters, path };
+        return this.pathBuilder.buildFinalPath();
     }
 }
