@@ -11,8 +11,8 @@ import {
 import { ERRORS } from '../utils/errors';
 
 export class Pathfinder {
-    private matrix: Matrix;
-    private stepTracker: StepTracker;
+    private readonly matrix: Matrix;
+    private readonly stepTracker: StepTracker;
     private directionManager: DirectionManager;
 
     constructor(matrix: string[][]) {
