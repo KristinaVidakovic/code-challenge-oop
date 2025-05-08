@@ -3,7 +3,11 @@ import { END_CHARACTER, START_CHARACTER } from '../utils/constants';
 import { ERRORS } from '../utils/errors';
 
 export class Matrix {
-    constructor(public readonly matrix: string[][]) {}
+    private readonly matrix: string[][];
+
+    constructor(matrix: string[][]) {
+        this.matrix = matrix;
+    }
 
     getCharacterAtPosition(position: Position): string {
         return this.matrix[position.y]?.[position.x] ?? ' ';

@@ -2,25 +2,25 @@ import { Matrix } from './matrix.class';
 import { StepTracker } from './step-tracker.class';
 import { DirectionManager } from './direction-manager.class';
 import { FinalPath } from '../interfaces/final-path.interface';
-import {
-    CORNER_CHARACTER,
-    END_CHARACTER,
-    NO_PATH_CHARACTER,
-    START_CHARACTER,
-} from '../utils/constants';
+import { END_CHARACTER, NO_PATH_CHARACTER, START_CHARACTER } from '../utils/constants';
 import { ERRORS } from '../utils/errors';
-import { Position } from '../interfaces/position.interface';
-import { Direction } from '../enums/direction.enum';
+import { CornerHandler } from './corner-handler.class';
 
 export class Pathfinder {
     private readonly matrix: Matrix;
     private readonly stepTracker: StepTracker;
-    private directionManager: DirectionManager;
+    private readonly directionManager: DirectionManager;
+    private cornerHandler: CornerHandler;
 
     constructor(matrix: string[][]) {
         this.matrix = new Matrix(matrix);
         this.stepTracker = new StepTracker();
         this.directionManager = new DirectionManager(this.matrix, this.stepTracker);
+        this.cornerHandler = new CornerHandler(
+            this.matrix,
+            this.stepTracker,
+            this.directionManager,
+        );
     }
 
     public findPath(): FinalPath {
@@ -32,7 +32,6 @@ export class Pathfinder {
         while (direction) {
             const nextPosition = this.directionManager.move(position, direction);
             const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
-
 
             if (nextCharacter === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
             if (!this.stepTracker.isValidPathCharacter(nextCharacter))
@@ -53,7 +52,7 @@ export class Pathfinder {
                 throw ERRORS.FAKE_TURN;
             }
 
-            if (this.isCorner(nextCharacter, position, direction)) {
+            if (this.cornerHandler.isCorner(nextCharacter, position, direction)) {
                 direction = this.directionManager.changeDirection(
                     direction,
                     position,
@@ -63,16 +62,6 @@ export class Pathfinder {
         }
 
         return this.getFinalPath();
-    }
-
-    isCorner(character: string, position: Position, direction: Direction): boolean {
-        return (
-            character === CORNER_CHARACTER ||
-            (this.stepTracker.isValidLetter(character) &&
-                this.matrix.getCharacterAtPosition(
-                    this.directionManager.move(position, direction),
-                ) === NO_PATH_CHARACTER)
-        );
     }
 
     getFinalPath(): FinalPath {
