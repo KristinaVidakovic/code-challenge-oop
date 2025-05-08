@@ -88,4 +88,13 @@ export class DirectionManager {
             !this.stepTracker.isVisited(nextPosition)
         );
     }
+
+    isCorner(character: string, position: Position, direction: Direction): boolean {
+        return (
+            character === CORNER_CHARACTER ||
+            (this.stepTracker.isValidLetter(character) &&
+                this.matrix.getCharacterAtPosition(PositionService.move(position, direction)) ===
+                    NO_PATH_CHARACTER)
+        );
+    }
 }

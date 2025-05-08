@@ -3,7 +3,6 @@ import { StepTracker } from './step-tracker.class';
 import { DirectionManager } from './direction-manager.class';
 import { FinalPath } from '../interfaces/final-path.interface';
 import { START_CHARACTER } from '../utils/constants';
-import { CornerHandler } from './corner-handler.class';
 import { PathValidator } from './path-validator.class';
 import { PathBuilder } from './path-builder.class';
 import { PathWalker } from './path-walker.class';
@@ -12,7 +11,6 @@ export class PathFinder {
     private readonly matrix: Matrix;
     private readonly stepTracker: StepTracker;
     private readonly directionManager: DirectionManager;
-    private readonly cornerHandler: CornerHandler;
     private pathValidator: PathValidator;
     private pathBuilder: PathBuilder;
     private pathWalker: PathWalker;
@@ -21,15 +19,9 @@ export class PathFinder {
         this.matrix = new Matrix(matrix);
         this.stepTracker = new StepTracker();
         this.directionManager = new DirectionManager(this.matrix, this.stepTracker);
-        this.cornerHandler = new CornerHandler(this.matrix, this.stepTracker);
         this.pathValidator = new PathValidator(this.matrix);
         this.pathBuilder = new PathBuilder(this.stepTracker);
-        this.pathWalker = new PathWalker(
-            this.matrix,
-            this.stepTracker,
-            this.directionManager,
-            this.cornerHandler,
-        );
+        this.pathWalker = new PathWalker(this.matrix, this.stepTracker, this.directionManager);
     }
 
     public findPath(): FinalPath {

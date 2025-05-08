@@ -6,24 +6,16 @@ import { ERRORS } from '../utils/errors';
 import { Matrix } from './matrix.class';
 import { StepTracker } from './step-tracker.class';
 import { DirectionManager } from './direction-manager.class';
-import { CornerHandler } from './corner-handler.class';
 
 export class PathWalker {
     private matrix: Matrix;
     private stepTracker: StepTracker;
     private directionManager: DirectionManager;
-    private cornerHandler: CornerHandler;
 
-    constructor(
-        matrix: Matrix,
-        stepTracker: StepTracker,
-        directionManager: DirectionManager,
-        cornerHandler: CornerHandler,
-    ) {
+    constructor(matrix: Matrix, stepTracker: StepTracker, directionManager: DirectionManager) {
         this.matrix = matrix;
         this.stepTracker = stepTracker;
         this.directionManager = directionManager;
-        this.cornerHandler = cornerHandler;
     }
 
     walk(position: Position, direction: Direction | null): void {
@@ -40,7 +32,7 @@ export class PathWalker {
 
             this.validateFakeTurn(direction, nextPosition);
 
-            if (this.cornerHandler.isCorner(nextCharacter, position, direction)) {
+            if (this.directionManager.isCorner(nextCharacter, position, direction)) {
                 direction = this.changeDirection(direction, position);
             }
         }
