@@ -6,6 +6,7 @@ import { END_CHARACTER, NO_PATH_CHARACTER, START_CHARACTER } from '../utils/cons
 import { ERRORS } from '../utils/errors';
 import { CornerHandler } from './corner-handler.class';
 import { PathValidator } from './path-validator.class';
+import { PositionService } from './position-service.class';
 
 export class Pathfinder {
     private readonly matrix: Matrix;
@@ -18,11 +19,7 @@ export class Pathfinder {
         this.matrix = new Matrix(matrix);
         this.stepTracker = new StepTracker();
         this.directionManager = new DirectionManager(this.matrix, this.stepTracker);
-        this.cornerHandler = new CornerHandler(
-            this.matrix,
-            this.stepTracker,
-            this.directionManager,
-        );
+        this.cornerHandler = new CornerHandler(this.matrix, this.stepTracker);
         this.pathValidator = new PathValidator(this.matrix);
     }
 
@@ -33,7 +30,7 @@ export class Pathfinder {
         this.stepTracker.addStep(START_CHARACTER, position, null);
 
         while (direction) {
-            const nextPosition = this.directionManager.move(position, direction);
+            const nextPosition = PositionService.move(position, direction);
             const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
 
             if (nextCharacter === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;

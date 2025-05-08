@@ -10,6 +10,7 @@ import {
 } from '../utils/constants';
 import { StepTracker } from './step-tracker.class';
 import { Step } from '../interfaces/step.interface';
+import { PositionService } from './position-service.class';
 
 export class DirectionManager {
     private matrix: Matrix;
@@ -25,7 +26,7 @@ export class DirectionManager {
         const directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT];
         let count = 0;
         for (const d of directions) {
-            const nextPosition = this.move(position, d);
+            const nextPosition = PositionService.move(position, d);
             const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
             if (this.stepTracker.isValidPathCharacter(nextCharacter)) {
                 count++;
@@ -48,7 +49,7 @@ export class DirectionManager {
                 : [Direction.LEFT, Direction.RIGHT];
         let count = 0;
         for (const newDirection of possibleTurns) {
-            const testPosition = this.move(position, newDirection);
+            const testPosition = PositionService.move(position, newDirection);
             const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
             const previousPosition = steps[steps.length - 2].position;
             if (
@@ -66,19 +67,6 @@ export class DirectionManager {
         return direction;
     }
 
-    move(position: Position, direction: Direction): Position {
-        switch (direction) {
-            case Direction.UP:
-                return { x: position.x, y: position.y - 1 };
-            case Direction.DOWN:
-                return { x: position.x, y: position.y + 1 };
-            case Direction.LEFT:
-                return { x: position.x - 1, y: position.y };
-            case Direction.RIGHT:
-                return { x: position.x + 1, y: position.y };
-        }
-    }
-
     areCharAndDirectionSynced(character: string, direction: Direction): boolean {
         switch (direction) {
             case Direction.DOWN:
@@ -92,7 +80,7 @@ export class DirectionManager {
 
     isFakeTurn(direction: Direction, position: Position): boolean {
         const character = this.matrix.getCharacterAtPosition(position);
-        const nextPosition = this.move(position, direction);
+        const nextPosition = PositionService.move(position, direction);
         const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
         return (
             character === CORNER_CHARACTER &&
