@@ -5,12 +5,14 @@ import { FinalPath } from '../interfaces/final-path.interface';
 import { END_CHARACTER, NO_PATH_CHARACTER, START_CHARACTER } from '../utils/constants';
 import { ERRORS } from '../utils/errors';
 import { CornerHandler } from './corner-handler.class';
+import { PathValidator } from './path-validator.class';
 
 export class Pathfinder {
     private readonly matrix: Matrix;
     private readonly stepTracker: StepTracker;
     private readonly directionManager: DirectionManager;
     private cornerHandler: CornerHandler;
+    private pathValidator: PathValidator;
 
     constructor(matrix: string[][]) {
         this.matrix = new Matrix(matrix);
@@ -21,10 +23,11 @@ export class Pathfinder {
             this.stepTracker,
             this.directionManager,
         );
+        this.pathValidator = new PathValidator(this.matrix);
     }
 
     public findPath(): FinalPath {
-        let position = this.matrix.validateAndGetStartPosition();
+        let position = this.pathValidator.validateAndGetStartPosition();
         let direction = this.directionManager.findStartDirection(position);
 
         this.stepTracker.addStep(START_CHARACTER, position, null);
