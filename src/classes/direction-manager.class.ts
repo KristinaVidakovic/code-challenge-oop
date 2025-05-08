@@ -43,28 +43,33 @@ export class DirectionManager {
     }
 
     changeDirection(direction: Direction, position: Position, steps: Step[]): Direction {
-        const possibleTurns: Direction[] =
+        const validTurns = this.getValidTurnDirections(position, direction, steps);
+        if (validTurns.length > 1) {
+            throw ERRORS.FORK_IN_PATH;
+        }
+        return validTurns[0];
+    }
+
+    private getValidTurnDirections(
+        position: Position,
+        direction: Direction,
+        steps: Step[],
+    ): Direction[] {
+        const orthogonalDirections =
             direction === Direction.LEFT || direction === Direction.RIGHT
                 ? [Direction.UP, Direction.DOWN]
                 : [Direction.LEFT, Direction.RIGHT];
-        let count = 0;
-        for (const newDirection of possibleTurns) {
+
+        const previousPosition = steps[steps.length - 2].position;
+
+        return orthogonalDirections.filter((newDirection) => {
             const testPosition = PositionService.move(position, newDirection);
             const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
-            const previousPosition = steps[steps.length - 2].position;
-            if (
+            return (
                 this.stepTracker.isValidPathCharacter(testCharacter) &&
                 testPosition !== previousPosition
-            ) {
-                count++;
-                direction = newDirection;
-                if (count > 1) {
-                    throw ERRORS.FORK_IN_PATH;
-                }
-            }
-        }
-
-        return direction;
+            );
+        });
     }
 
     areCharAndDirectionSynced(character: string, direction: Direction): boolean {
