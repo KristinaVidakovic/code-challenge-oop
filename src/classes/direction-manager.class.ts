@@ -1,0 +1,103 @@
+import { Matrix } from './matrix.class';
+import { Position } from '../interfaces/position.interface';
+import { Direction } from '../enums/direction.enum';
+import { ERRORS } from '../utils/errors';
+import {
+    CORNER_CHARACTER,
+    HORIZONTAL_CHARACTER,
+    NO_PATH_CHARACTER,
+    VERTICAL_CHARACTER,
+} from '../utils/constants';
+import { StepTracker } from './step-tracker.class';
+import { Step } from '../interfaces/step.interface';
+
+export class DirectionManager {
+    private matrix: Matrix;
+    private stepTracker: StepTracker;
+
+    constructor(matrix: Matrix, stepTracker: StepTracker) {
+        this.matrix = matrix;
+        this.stepTracker = stepTracker;
+    }
+
+    findStartDirection(position: Position): Direction {
+        let direction: Direction | null = null;
+        const directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT];
+        let count = 0;
+        for (const d of directions) {
+            const nextPosition = this.move(position, d);
+            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
+            if (this.stepTracker.isValidPathChar(nextCharacter)) {
+                count++;
+                direction = d;
+                if (count > 1) {
+                    throw ERRORS.MULTIPLE_START_PATHS;
+                }
+            }
+        }
+        if (direction === null) {
+            throw ERRORS.BROKEN_PATH;
+        }
+        return direction;
+    }
+
+    changeDirection(direction: Direction, position: Position, steps: Step[]): Direction {
+        const possibleTurns: Direction[] =
+            direction === Direction.LEFT || direction === Direction.RIGHT
+                ? [Direction.UP, Direction.DOWN]
+                : [Direction.LEFT, Direction.RIGHT];
+        let count = 0;
+        for (const newDirection of possibleTurns) {
+            const testPosition = this.move(position, newDirection);
+            const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
+            const previousPosition = steps[steps.length - 2].position;
+            if (
+                this.stepTracker.isValidPathChar(testCharacter) &&
+                testPosition !== previousPosition
+            ) {
+                count++;
+                direction = newDirection;
+                if (count > 1) {
+                    throw ERRORS.FORK_IN_PATH;
+                }
+            }
+        }
+
+        return direction;
+    }
+
+    move(position: Position, direction: Direction): Position {
+        switch (direction) {
+            case Direction.UP:
+                return { x: position.x, y: position.y - 1 };
+            case Direction.DOWN:
+                return { x: position.x, y: position.y + 1 };
+            case Direction.LEFT:
+                return { x: position.x - 1, y: position.y };
+            case Direction.RIGHT:
+                return { x: position.x + 1, y: position.y };
+        }
+    }
+
+    areCharAndDirectionSynced(char: string, direction: Direction): boolean {
+        switch (direction) {
+            case Direction.DOWN:
+            case Direction.UP:
+                return char !== HORIZONTAL_CHARACTER;
+            case Direction.LEFT:
+            case Direction.RIGHT:
+                return char !== VERTICAL_CHARACTER;
+        }
+    }
+
+    isFakeTurn(direction: Direction, position: Position): boolean {
+        const char = this.matrix.getCharacterAtPosition(position);
+        const nextPosition = this.move(position, direction);
+        const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
+        return (
+            char === CORNER_CHARACTER &&
+            nextCharacter !== NO_PATH_CHARACTER &&
+            !this.stepTracker.isVisited(nextPosition)
+        );
+    }
+}
