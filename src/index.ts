@@ -17,8 +17,7 @@ try {
     const content = fs.readFileSync(options.file, { encoding: 'utf8' });
     const contentMatrix = content.split('\n').map((str) => str.split(''));
     const pathfinder = new PathFinder(contentMatrix);
-    const result = pathfinder.findPath();
-    console.log(`Letters: ${result.letters} \nPath: ${result.path}`);
+    console.log(`Letters: ${pathfinder.letters} \nPath: ${pathfinder.path}`);
 } catch (error) {
     console.error(error);
     process.exit(1);

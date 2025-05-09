@@ -14,6 +14,7 @@ export class PathFinder {
     private readonly matrixValidator: MatrixValidator;
     private readonly pathBuilder: PathBuilder;
     private readonly pathWalker: PathWalker;
+    private readonly finalPath: FinalPath;
 
     constructor(matrix: string[][]) {
         this.matrix = new Matrix(matrix);
@@ -22,13 +23,23 @@ export class PathFinder {
         this.matrixValidator = new MatrixValidator(this.matrix);
         this.pathBuilder = new PathBuilder(this.stepTracker);
         this.pathWalker = new PathWalker(this.matrix, this.stepTracker, this.directionManager);
+
+        this.finalPath = this.run();
     }
 
-    public findPath(): FinalPath {
+    private run(): FinalPath {
         let position = this.matrixValidator.validateAndGetStartPosition();
         let direction = this.directionManager.findStartDirection(position);
         this.stepTracker.addStep(START_CHARACTER, position, null);
         this.pathWalker.walk(position, direction);
         return this.pathBuilder.buildFinalPath();
+    }
+
+    get letters(): string {
+        return this.finalPath.letters;
+    }
+
+    get path(): string {
+        return this.finalPath.path;
     }
 }
