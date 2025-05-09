@@ -22,24 +22,14 @@ export class DirectionManager {
     }
 
     findStartDirection(position: Position): Direction {
-        let direction: Direction | null = null;
-        const directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT];
-        let count = 0;
-        for (const d of directions) {
-            const nextPosition = PositionService.move(position, d);
-            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
-            if (this.stepTracker.isValidPathCharacter(nextCharacter)) {
-                count++;
-                direction = d;
-                if (count > 1) {
-                    throw ERRORS.MULTIPLE_START_PATHS;
-                }
-            }
-        }
-        if (direction === null) {
+        const validDirections = this.getValidStartDirections(position);
+        if (validDirections.length === 0) {
             throw ERRORS.BROKEN_PATH;
         }
-        return direction;
+        if (validDirections.length > 1) {
+            throw ERRORS.MULTIPLE_START_PATHS;
+        }
+        return validDirections[0];
     }
 
     changeDirection(direction: Direction, position: Position, steps: Step[]): Direction {
@@ -48,28 +38,6 @@ export class DirectionManager {
             throw ERRORS.FORK_IN_PATH;
         }
         return validTurns[0];
-    }
-
-    private getValidTurnDirections(
-        position: Position,
-        direction: Direction,
-        steps: Step[],
-    ): Direction[] {
-        const orthogonalDirections =
-            direction === Direction.LEFT || direction === Direction.RIGHT
-                ? [Direction.UP, Direction.DOWN]
-                : [Direction.LEFT, Direction.RIGHT];
-
-        const previousPosition = steps[steps.length - 2].position;
-
-        return orthogonalDirections.filter((newDirection) => {
-            const testPosition = PositionService.move(position, newDirection);
-            const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
-            return (
-                this.stepTracker.isValidPathCharacter(testCharacter) &&
-                testPosition !== previousPosition
-            );
-        });
     }
 
     areCharAndDirectionSynced(character: string, direction: Direction): boolean {
@@ -101,5 +69,35 @@ export class DirectionManager {
                 this.matrix.getCharacterAtPosition(PositionService.move(position, direction)) ===
                     NO_PATH_CHARACTER)
         );
+    }
+
+    private getValidTurnDirections(
+        position: Position,
+        direction: Direction,
+        steps: Step[],
+    ): Direction[] {
+        const orthogonalDirections =
+            direction === Direction.LEFT || direction === Direction.RIGHT
+                ? [Direction.UP, Direction.DOWN]
+                : [Direction.LEFT, Direction.RIGHT];
+
+        const previousPosition = steps[steps.length - 2].position;
+
+        return orthogonalDirections.filter((newDirection) => {
+            const testPosition = PositionService.move(position, newDirection);
+            const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
+            return (
+                this.stepTracker.isValidPathCharacter(testCharacter) &&
+                testPosition !== previousPosition
+            );
+        });
+    }
+
+    private getValidStartDirections(position: Position): Direction[] {
+        return Object.values(Direction).filter((direction) => {
+            const nextPosition = PositionService.move(position, direction);
+            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
+            return this.stepTracker.isValidPathCharacter(nextCharacter);
+        });
     }
 }
