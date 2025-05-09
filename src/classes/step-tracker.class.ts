@@ -1,7 +1,6 @@
 import { Step } from '../interfaces/step.interface';
 import { Position } from '../interfaces/position.interface';
 import { Direction } from '../enums/direction.enum';
-import { PathStep } from './path-step.class';
 
 export class StepTracker {
     private steps: Step[] = [];
@@ -9,14 +8,14 @@ export class StepTracker {
     private visited: Position[] = [];
 
     addStep(character: string, position: Position, direction: Direction | null): void {
-        this.steps.push(PathStep.createStep(character, position, direction));
-        if (!this.isVisited(position)) {
+        this.steps.push(this.createStep(character, position, direction));
+        if (!this.isVisitedPosition(position)) {
             this.visited.push(position);
             if (this.isValidLetter(character)) this.letters.push(character);
         }
     }
 
-    isVisited(position: Position): boolean {
+    isVisitedPosition(position: Position): boolean {
         return this.visited.some((p) => p.x === position.x && p.y === position.y);
     }
 
@@ -40,5 +39,9 @@ export class StepTracker {
     isValidLetter(char: string): boolean {
         const validLetterRegex: RegExp = new RegExp('^[A-Z]$');
         return validLetterRegex.test(char);
+    }
+
+    private createStep(character: string, position: Position, direction: Direction | null): Step {
+        return { char: character, position: { ...position }, direction };
     }
 }

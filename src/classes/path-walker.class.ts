@@ -43,7 +43,7 @@ export class PathWalker {
         if (!this.stepTracker.isValidPathCharacter(character)) throw ERRORS.INVALID_CHARACTER;
         if (
             !this.directionManager.areCharAndDirectionSynced(character, direction) &&
-            !this.stepTracker.isVisited(position)
+            !this.stepTracker.isVisitedPosition(position)
         ) {
             throw ERRORS.INVALID_DIRECTION(direction);
         }

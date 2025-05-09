@@ -58,7 +58,7 @@ export class DirectionManager {
         return (
             character === CORNER_CHARACTER &&
             nextCharacter !== NO_PATH_CHARACTER &&
-            !this.stepTracker.isVisited(nextPosition)
+            !this.stepTracker.isVisitedPosition(nextPosition)
         );
     }
 
