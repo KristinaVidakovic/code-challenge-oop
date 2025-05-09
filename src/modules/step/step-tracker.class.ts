@@ -9,10 +9,11 @@ export class StepTracker {
 
     addStep(character: string, position: Position, direction: Direction | null): void {
         this.steps.push(this.createStep(character, position, direction));
-        if (!this.isVisitedPosition(position)) {
-            this.visited.push(position);
-            if (this.isValidLetter(character)) this.letters.push(character);
+        if (this.isVisitedPosition(position)) {
+            return;
         }
+        this.trackVisited(position);
+        this.collectLetter(character);
     }
 
     isVisitedPosition(position: Position): boolean {
@@ -43,5 +44,15 @@ export class StepTracker {
 
     private createStep(character: string, position: Position, direction: Direction | null): Step {
         return { char: character, position: { ...position }, direction };
+    }
+
+    private trackVisited(position: Position): void {
+        this.visited.push(position);
+    }
+
+    private collectLetter(character: string): void {
+        if (this.isValidLetter(character)) {
+            this.letters.push(character);
+        }
     }
 }
