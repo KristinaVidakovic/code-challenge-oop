@@ -3,9 +3,9 @@ import { Position } from '../interfaces/position.interface';
 import { Direction } from '../enums/direction.enum';
 
 export class StepTracker {
-    private steps: Step[] = [];
-    private letters: string[] = [];
-    private visited: Position[] = [];
+    private readonly steps: Step[] = [];
+    private readonly letters: string[] = [];
+    private readonly visited: Position[] = [];
 
     addStep(character: string, position: Position, direction: Direction | null): void {
         this.steps.push(this.createStep(character, position, direction));
