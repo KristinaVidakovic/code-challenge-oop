@@ -8,9 +8,9 @@ import { StepTracker } from './step-tracker.class';
 import { DirectionManager } from './direction-manager.class';
 
 export class PathWalker {
-    private matrix: Matrix;
-    private stepTracker: StepTracker;
-    private directionManager: DirectionManager;
+    private readonly matrix: Matrix;
+    private readonly stepTracker: StepTracker;
+    private readonly directionManager: DirectionManager;
 
     constructor(matrix: Matrix, stepTracker: StepTracker, directionManager: DirectionManager) {
         this.matrix = matrix;
@@ -39,8 +39,12 @@ export class PathWalker {
     }
 
     private validateStep(character: string, direction: Direction, position: Position): void {
-        if (character === NO_PATH_CHARACTER) throw ERRORS.BROKEN_PATH;
-        if (!this.stepTracker.isValidPathCharacter(character)) throw ERRORS.INVALID_CHARACTER;
+        if (character === NO_PATH_CHARACTER) {
+            throw ERRORS.BROKEN_PATH;
+        }
+        if (!this.stepTracker.isValidPathCharacter(character)) {
+            throw ERRORS.INVALID_CHARACTER;
+        }
         if (
             !this.directionManager.areCharAndDirectionSynced(character, direction) &&
             !this.stepTracker.isVisitedPosition(position)
