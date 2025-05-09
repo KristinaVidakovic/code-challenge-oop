@@ -1,9 +1,9 @@
-import { Matrix } from '../matrix/matrix.class';
+import { Matrix } from './matrix.class';
 import { Position } from '../../interfaces/position.interface';
 import { END_CHARACTER, START_CHARACTER } from '../../utils/constants';
 import { ERRORS } from '../../utils/errors';
 
-export class PathValidator {
+export class MatrixValidator {
     private readonly matrix: Matrix;
 
     constructor(matrix: Matrix) {
