@@ -31,12 +31,17 @@ export class DirectionManager {
         return validDirections[0];
     }
 
-    changeDirection(direction: Direction, position: Position, steps: Step[]): Direction {
-        const validTurns = this.getValidTurnDirections(position, direction, steps);
-        if (validTurns.length > 1) {
-            throw ERRORS.FORK_IN_PATH;
+    move(position: Position, direction: Direction): Position {
+        switch (direction) {
+            case Direction.UP:
+                return { x: position.x, y: position.y - 1 };
+            case Direction.DOWN:
+                return { x: position.x, y: position.y + 1 };
+            case Direction.LEFT:
+                return { x: position.x - 1, y: position.y };
+            case Direction.RIGHT:
+                return { x: position.x + 1, y: position.y };
         }
-        return validTurns[0];
     }
 
     areCharAndDirectionSynced(character: string, direction: Direction): boolean {
@@ -61,19 +66,6 @@ export class DirectionManager {
         );
     }
 
-    move(position: Position, direction: Direction): Position {
-        switch (direction) {
-            case Direction.UP:
-                return { x: position.x, y: position.y - 1 };
-            case Direction.DOWN:
-                return { x: position.x, y: position.y + 1 };
-            case Direction.LEFT:
-                return { x: position.x - 1, y: position.y };
-            case Direction.RIGHT:
-                return { x: position.x + 1, y: position.y };
-        }
-    }
-
     isCorner(character: string, position: Position, direction: Direction): boolean {
         return (
             character === CORNER_CHARACTER ||
@@ -81,6 +73,22 @@ export class DirectionManager {
                 this.matrix.getCharacterAtPosition(this.move(position, direction)) ===
                     NO_PATH_CHARACTER)
         );
+    }
+
+    changeDirection(direction: Direction, position: Position, steps: Step[]): Direction {
+        const validTurns = this.getValidTurnDirections(position, direction, steps);
+        if (validTurns.length > 1) {
+            throw ERRORS.FORK_IN_PATH;
+        }
+        return validTurns[0];
+    }
+
+    private getValidStartDirections(position: Position): Direction[] {
+        return Object.values(Direction).filter((direction) => {
+            const nextPosition = this.move(position, direction);
+            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
+            return this.stepTracker.isValidPathCharacter(nextCharacter);
+        });
     }
 
     private getValidTurnDirections(
@@ -102,14 +110,6 @@ export class DirectionManager {
                 this.stepTracker.isValidPathCharacter(testCharacter) &&
                 testPosition !== previousPosition
             );
-        });
-    }
-
-    private getValidStartDirections(position: Position): Direction[] {
-        return Object.values(Direction).filter((direction) => {
-            const nextPosition = this.move(position, direction);
-            const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
-            return this.stepTracker.isValidPathCharacter(nextCharacter);
         });
     }
 }

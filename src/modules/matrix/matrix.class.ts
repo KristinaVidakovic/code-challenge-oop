@@ -7,10 +7,6 @@ export class Matrix {
         this.matrix = matrix;
     }
 
-    getCharacterAtPosition(position: Position): string {
-        return this.matrix[position.y]?.[position.x] ?? ' ';
-    }
-
     findCharacterPosition(character: string): Position | null {
         for (let y = 0; y < this.matrix.length; y++) {
             for (let x = 0; x < this.matrix[y].length; x++) {
@@ -31,5 +27,9 @@ export class Matrix {
             }
         }
         return false;
+    }
+
+    getCharacterAtPosition(position: Position): string {
+        return this.matrix[position.y]?.[position.x] ?? ' ';
     }
 }

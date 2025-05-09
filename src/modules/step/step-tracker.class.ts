@@ -19,16 +19,9 @@ export class StepTracker {
         return this.visited.some((p) => p.x === position.x && p.y === position.y);
     }
 
-    getPath(): string {
-        return this.steps.map((s) => s.char).join('');
-    }
-
-    getLetters(): string {
-        return this.letters.join('');
-    }
-
-    getSteps(): Step[] {
-        return this.steps;
+    isValidLetter(char: string): boolean {
+        const validLetterRegex: RegExp = new RegExp('^[A-Z]$');
+        return validLetterRegex.test(char);
     }
 
     isValidPathCharacter(char: string): boolean {
@@ -36,9 +29,16 @@ export class StepTracker {
         return validCharacterRegex.test(char);
     }
 
-    isValidLetter(char: string): boolean {
-        const validLetterRegex: RegExp = new RegExp('^[A-Z]$');
-        return validLetterRegex.test(char);
+    getSteps(): Step[] {
+        return this.steps;
+    }
+
+    getLetters(): string {
+        return this.letters.join('');
+    }
+
+    getPath(): string {
+        return this.steps.map((s) => s.char).join('');
     }
 
     private createStep(character: string, position: Position, direction: Direction | null): Step {
