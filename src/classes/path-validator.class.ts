@@ -13,12 +13,18 @@ export class PathValidator {
     validateAndGetStartPosition(): Position {
         const startPosition = this.matrix.findCharacterPosition(START_CHARACTER);
         const endPosition = this.matrix.findCharacterPosition(END_CHARACTER);
-
-        if (!startPosition) throw ERRORS.MISSING_START;
-        if (!endPosition) throw ERRORS.MISSING_END;
-        if (this.matrix.hasMultipleOccurrences(START_CHARACTER)) throw ERRORS.MULTIPLE_STARTS;
-        if (this.matrix.hasMultipleOccurrences(END_CHARACTER)) throw ERRORS.MULTIPLE_ENDS;
-
+        if (!startPosition) {
+            throw ERRORS.MISSING_START;
+        }
+        if (!endPosition) {
+            throw ERRORS.MISSING_END;
+        }
+        if (this.matrix.hasMultipleOccurrences(START_CHARACTER)) {
+            throw ERRORS.MULTIPLE_STARTS;
+        }
+        if (this.matrix.hasMultipleOccurrences(END_CHARACTER)) {
+            throw ERRORS.MULTIPLE_ENDS;
+        }
         return startPosition;
     }
 }
