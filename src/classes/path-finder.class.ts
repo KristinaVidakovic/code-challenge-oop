@@ -11,9 +11,9 @@ export class PathFinder {
     private readonly matrix: Matrix;
     private readonly stepTracker: StepTracker;
     private readonly directionManager: DirectionManager;
-    private pathValidator: PathValidator;
-    private pathBuilder: PathBuilder;
-    private pathWalker: PathWalker;
+    private readonly pathValidator: PathValidator;
+    private readonly pathBuilder: PathBuilder;
+    private readonly pathWalker: PathWalker;
 
     constructor(matrix: string[][]) {
         this.matrix = new Matrix(matrix);
@@ -27,11 +27,8 @@ export class PathFinder {
     public findPath(): FinalPath {
         let position = this.pathValidator.validateAndGetStartPosition();
         let direction = this.directionManager.findStartDirection(position);
-
         this.stepTracker.addStep(START_CHARACTER, position, null);
-
         this.pathWalker.walk(position, direction);
-
         return this.pathBuilder.buildFinalPath();
     }
 }
