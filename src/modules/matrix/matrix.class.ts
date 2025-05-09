@@ -1,4 +1,4 @@
-import { Position } from '../interfaces/position.interface';
+import { Position } from '../../interfaces/position.interface';
 
 export class Matrix {
     private readonly matrix: string[][];

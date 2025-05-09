@@ -1,10 +1,10 @@
-import { Position } from '../interfaces/position.interface';
-import { Direction } from '../enums/direction.enum';
-import { END_CHARACTER, NO_PATH_CHARACTER } from '../utils/constants';
-import { ERRORS } from '../utils/errors';
-import { Matrix } from './matrix.class';
-import { StepTracker } from './step-tracker.class';
-import { DirectionManager } from './direction-manager.class';
+import { Position } from '../../interfaces/position.interface';
+import { Direction } from '../../enums/direction.enum';
+import { END_CHARACTER, NO_PATH_CHARACTER } from '../../utils/constants';
+import { ERRORS } from '../../utils/errors';
+import { Matrix } from '../matrix/matrix.class';
+import { StepTracker } from '../step/step-tracker.class';
+import { DirectionManager } from '../direction/direction-manager.class';
 
 export class PathWalker {
     private readonly matrix: Matrix;

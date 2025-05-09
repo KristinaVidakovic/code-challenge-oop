@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import * as fs from 'fs';
-import { PathFinder } from './classes/path-finder.class';
+import { PathFinder } from './modules/path/path-finder.class';
 
 const program = new Command();
 

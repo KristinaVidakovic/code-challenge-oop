@@ -1,5 +1,5 @@
-import { StepTracker } from './step-tracker.class';
-import { FinalPath } from '../interfaces/final-path.interface';
+import { StepTracker } from '../step/step-tracker.class';
+import { FinalPath } from '../../interfaces/final-path.interface';
 
 export class PathBuilder {
     private readonly stepTracker: StepTracker;

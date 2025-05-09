@@ -1,6 +1,6 @@
-import { Step } from '../interfaces/step.interface';
-import { Position } from '../interfaces/position.interface';
-import { Direction } from '../enums/direction.enum';
+import { Step } from '../../interfaces/step.interface';
+import { Position } from '../../interfaces/position.interface';
+import { Direction } from '../../enums/direction.enum';
 
 export class StepTracker {
     private readonly steps: Step[] = [];

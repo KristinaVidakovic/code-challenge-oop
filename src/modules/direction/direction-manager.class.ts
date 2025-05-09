@@ -1,15 +1,15 @@
-import { Matrix } from './matrix.class';
-import { Position } from '../interfaces/position.interface';
-import { Direction } from '../enums/direction.enum';
-import { ERRORS } from '../utils/errors';
+import { Matrix } from '../matrix/matrix.class';
+import { Position } from '../../interfaces/position.interface';
+import { Direction } from '../../enums/direction.enum';
+import { ERRORS } from '../../utils/errors';
 import {
     CORNER_CHARACTER,
     HORIZONTAL_CHARACTER,
     NO_PATH_CHARACTER,
     VERTICAL_CHARACTER,
-} from '../utils/constants';
-import { StepTracker } from './step-tracker.class';
-import { Step } from '../interfaces/step.interface';
+} from '../../utils/constants';
+import { StepTracker } from '../step/step-tracker.class';
+import { Step } from '../../interfaces/step.interface';
 
 export class DirectionManager {
     private readonly matrix: Matrix;

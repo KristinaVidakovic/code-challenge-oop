@@ -1,7 +1,7 @@
-import { Matrix } from './matrix.class';
-import { Position } from '../interfaces/position.interface';
-import { END_CHARACTER, START_CHARACTER } from '../utils/constants';
-import { ERRORS } from '../utils/errors';
+import { Matrix } from '../matrix/matrix.class';
+import { Position } from '../../interfaces/position.interface';
+import { END_CHARACTER, START_CHARACTER } from '../../utils/constants';
+import { ERRORS } from '../../utils/errors';
 
 export class PathValidator {
     private readonly matrix: Matrix;

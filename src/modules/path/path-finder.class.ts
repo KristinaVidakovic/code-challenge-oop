@@ -1,8 +1,8 @@
-import { Matrix } from './matrix.class';
-import { StepTracker } from './step-tracker.class';
-import { DirectionManager } from './direction-manager.class';
-import { FinalPath } from '../interfaces/final-path.interface';
-import { START_CHARACTER } from '../utils/constants';
+import { Matrix } from '../matrix/matrix.class';
+import { StepTracker } from '../step/step-tracker.class';
+import { DirectionManager } from '../direction/direction-manager.class';
+import { FinalPath } from '../../interfaces/final-path.interface';
+import { START_CHARACTER } from '../../utils/constants';
 import { PathValidator } from './path-validator.class';
 import { PathBuilder } from './path-builder.class';
 import { PathWalker } from './path-walker.class';
