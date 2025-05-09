@@ -1,6 +1,5 @@
 import { Position } from '../interfaces/position.interface';
 import { Direction } from '../enums/direction.enum';
-import { PositionService } from './position-service.class';
 import { END_CHARACTER, NO_PATH_CHARACTER } from '../utils/constants';
 import { ERRORS } from '../utils/errors';
 import { Matrix } from './matrix.class';
@@ -20,7 +19,7 @@ export class PathWalker {
 
     walk(position: Position, direction: Direction | null): void {
         while (direction) {
-            const nextPosition = PositionService.move(position, direction);
+            const nextPosition = this.directionManager.move(position, direction);
             const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
 
             this.validateStep(nextCharacter, direction, nextPosition);

@@ -10,7 +10,6 @@ import {
 } from '../utils/constants';
 import { StepTracker } from './step-tracker.class';
 import { Step } from '../interfaces/step.interface';
-import { PositionService } from './position-service.class';
 
 export class DirectionManager {
     private readonly matrix: Matrix;
@@ -53,7 +52,7 @@ export class DirectionManager {
 
     isFakeTurn(direction: Direction, position: Position): boolean {
         const character = this.matrix.getCharacterAtPosition(position);
-        const nextPosition = PositionService.move(position, direction);
+        const nextPosition = this.move(position, direction);
         const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
         return (
             character === CORNER_CHARACTER &&
@@ -62,11 +61,24 @@ export class DirectionManager {
         );
     }
 
+    move(position: Position, direction: Direction): Position {
+        switch (direction) {
+            case Direction.UP:
+                return { x: position.x, y: position.y - 1 };
+            case Direction.DOWN:
+                return { x: position.x, y: position.y + 1 };
+            case Direction.LEFT:
+                return { x: position.x - 1, y: position.y };
+            case Direction.RIGHT:
+                return { x: position.x + 1, y: position.y };
+        }
+    }
+
     isCorner(character: string, position: Position, direction: Direction): boolean {
         return (
             character === CORNER_CHARACTER ||
             (this.stepTracker.isValidLetter(character) &&
-                this.matrix.getCharacterAtPosition(PositionService.move(position, direction)) ===
+                this.matrix.getCharacterAtPosition(this.move(position, direction)) ===
                     NO_PATH_CHARACTER)
         );
     }
@@ -84,7 +96,7 @@ export class DirectionManager {
         const previousPosition = steps[steps.length - 2].position;
 
         return orthogonalDirections.filter((newDirection) => {
-            const testPosition = PositionService.move(position, newDirection);
+            const testPosition = this.move(position, newDirection);
             const testCharacter = this.matrix.getCharacterAtPosition(testPosition);
             return (
                 this.stepTracker.isValidPathCharacter(testCharacter) &&
@@ -95,7 +107,7 @@ export class DirectionManager {
 
     private getValidStartDirections(position: Position): Direction[] {
         return Object.values(Direction).filter((direction) => {
-            const nextPosition = PositionService.move(position, direction);
+            const nextPosition = this.move(position, direction);
             const nextCharacter = this.matrix.getCharacterAtPosition(nextPosition);
             return this.stepTracker.isValidPathCharacter(nextCharacter);
         });
